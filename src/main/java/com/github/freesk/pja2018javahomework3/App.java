@@ -105,11 +105,11 @@ public class App {
     public static void printStopInfo(ArrayList<Stop> stops) {
 		for (Stop s : stops) {
 			String message = "";
-			ArrayList<Route> rountes = RouteService.getRoutesByStop(s);
+			ArrayList<String> rountes = RouteService.getRoutesByStop(s);
 			if (rountes.size() > 0) {
 				String multiroute = "";
 				for (int i = 0; i < rountes.size(); i++) {
-					multiroute += rountes.get(i).getName();
+					multiroute += rountes.get(i);
 					multiroute += (i == (rountes.size() - 1) ? "" : ", ");
 				}
 				message = " * " + s.getName() + " (" + StopService.getStopType(s) + ")" + " [" + multiroute + "]";
@@ -135,10 +135,7 @@ public class App {
     }
     
     public static void showRoutesMenu() {
-    	ArrayList<String> model = new ArrayList<String>(); 
-    	
-    	for (Route r : RouteService.routes)
-    		model.add(r.getName() + " (" + RouteService.getRouteType(r) + ")");
+    	ArrayList<String> model = RouteService.getAllRoutes(); 
     	
     	model.add("Exit");
     	
@@ -147,12 +144,12 @@ public class App {
     	if (n == (model.size() - 1))
     		showMainMenu();
     	else 
-    		showOptionsForRoute(RouteService.getRoutById(n));
+    		showOptionsForRouteId(n);
     }
     
-    public static void showOptionsForRoute(Route r) {
+    public static void showOptionsForRouteId(int id) {
     	
-    	System.out.println(r.getName() + " (" + RouteService.getRouteType(r) +  ")");
+    	System.out.println(RouteService.getRouteInfoById(id));
     	
         ArrayList<String> menuItems = new ArrayList<String>();
     
@@ -168,33 +165,33 @@ public class App {
         	showRoutesMenu();
         	// back to the all the routes menu
         } else if (n == 0) {
-        	r.assingStops(selectStops(r.getType()));
+        	RouteService.assingStopsToRouteId(id, selectStops(RouteService.getRouteIdType(id)));
         	// back the the route menu
-        	showOptionsForRoute(r);
+        	showOptionsForRouteId(id);
         } else if (n == 1) {
-        	printRouteInfo(r);
+        	printRouteIdInfo(id);
             // back the the route menu
-            showOptionsForRoute(r);
+            showOptionsForRouteId(id);
         } else if (n == 2) {
         	String name = getRouteNameInput();
-            r.setName(name);
+        	RouteService.renameRouteId(id, name);
             // back the the route menu
-            showOptionsForRoute(r);
+            showOptionsForRouteId(id);
         } else if (n == 3) {
         	System.out.print("Are you sure? ");
         	boolean answer = yesOrNo();
         	if (answer) {
-        		RouteService.removeRoute(r);
+        		RouteService.removeByRouteId(id);
         		showRoutesMenu();
         	} else {
-        		showOptionsForRoute(r);
+        		showOptionsForRouteId(id);
         	}	
         } 
         
     }
     
-    public static void printRouteInfo(Route r) {
-    	printStopInfo(r.stops);	    
+    public static void printRouteIdInfo(int id) {
+    	printStopInfo(RouteService.getRouteIdStops(id));	    
     }
     
     public static String getRouteNameInput() {
@@ -238,17 +235,15 @@ public class App {
         System.out.print("Would you like to assing stations? "); 	
         
         boolean answer = yesOrNo();
+       
+        ArrayList<Stop> stops = new ArrayList<Stop>();
         
-        Route r = null;
+        if (answer)
+        	stops = selectStops(type);
         
-        if (answer) 
-        	r = new Route(type, name, selectStops(type));
-        else 
-        	r = new Route(type, name);
-        
-        RouteService.addRoute(r);
-        
-        System.out.println("Route " + r.getName() + " of type " + RouteService.getRouteType(r) + " has been created with " + r.getNumberOfStops() + " stations");
+        RouteService.addRoute(type, name, selectStops(type));
+        	
+        System.out.println("Route " + name + " of type " + RouteService.getRouteType(type) + " has been created with " + stops.size() + " stations");
         
         showMainMenu();
     }
