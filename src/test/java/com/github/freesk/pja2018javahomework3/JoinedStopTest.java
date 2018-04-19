@@ -13,7 +13,7 @@ public class JoinedStopTest {
 		JoinedStop j = new JoinedStop();
 		j.addStop(new Stop("test-stop-1", 1));
 		j.addStop(new Stop("test-stop-2", 1));
-		int type = j.getType();
+		int type = j.getTypeId();
 		
 		Assert.assertEquals(1, type);
 	}
@@ -23,7 +23,7 @@ public class JoinedStopTest {
 		JoinedStop j = new JoinedStop();
 		j.addStop(new Stop("test-stop-1", 2));
 		j.addStop(new Stop("test-stop-2", 2));
-		int type = j.getType();
+		int type = j.getTypeId();
 		
 		Assert.assertEquals(2, type);
 	}
@@ -33,7 +33,7 @@ public class JoinedStopTest {
 		JoinedStop j = new JoinedStop();
 		j.addStop(new Stop("test-stop-1", 1));
 		j.addStop(new Stop("test-stop-2", 2));
-		int type = j.getType();
+		int type = j.getTypeId();
 		
 		Assert.assertEquals(0, type);
 	}

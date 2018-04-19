@@ -105,12 +105,12 @@ public class App {
     public static void printStopInfo(ArrayList<Stop> stops) {
 		for (Stop s : stops) {
 			String message = "";
-			ArrayList<String> rountes = RouteService.getRoutesByStop(s);
-			if (rountes.size() > 0) {
+			ArrayList<String> routes = RouteService.getRoutesByStop(s);
+			if (routes.size() > 0) {
 				String multiroute = "";
-				for (int i = 0; i < rountes.size(); i++) {
-					multiroute += rountes.get(i);
-					multiroute += (i == (rountes.size() - 1) ? "" : ", ");
+				for (int i = 0; i < routes.size(); i++) {
+					multiroute += routes.get(i);
+					multiroute += (i == (routes.size() - 1) ? "" : ", ");
 				}
 				message = " * " + s.getName() + " (" + StopService.getStopType(s) + ")" + " [" + multiroute + "]";
 			} else {
@@ -165,7 +165,7 @@ public class App {
         	showRoutesMenu();
         	// back to the all the routes menu
         } else if (n == 0) {
-        	RouteService.assingStopsToRouteId(id, selectStops(RouteService.getRouteIdType(id)));
+        	RouteService.assingStopsToRouteId(id, selectStops(RouteService.getRouteIdTypeId(id)));
         	// back the the route menu
         	showOptionsForRouteId(id);
         } else if (n == 1) {
@@ -230,7 +230,7 @@ public class App {
     public static void showCreateNewRouteMenu() { 
        
     	String name = getRouteNameInput();
-        int type = getRouteTypeInput();
+        int typeId = getRouteTypeInput();
         
         System.out.print("Would you like to assing stations? "); 	
         
@@ -238,12 +238,11 @@ public class App {
        
         ArrayList<Stop> stops = new ArrayList<Stop>();
         
-        if (answer)
-        	stops = selectStops(type);
+        if (answer) stops = selectStops(typeId);
         
-        RouteService.addRoute(type, name, selectStops(type));
+        RouteService.addRoute(typeId, name, stops);
         	
-        System.out.println("Route " + name + " of type " + RouteService.getRouteType(type) + " has been created with " + stops.size() + " stations");
+        System.out.println("Route " + name + " of type " + RouteService.getRouteType(typeId) + " has been created with " + stops.size() + " stations");
         
         showMainMenu();
     }

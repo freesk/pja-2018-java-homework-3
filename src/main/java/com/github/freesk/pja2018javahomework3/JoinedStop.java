@@ -5,29 +5,29 @@ import java.util.ArrayList;
 public class JoinedStop extends Stop {
 
 	private ArrayList<Stop> stops = new ArrayList<Stop>();
-	private int type = 0;
+	private int typeId = 0;
 
 	public JoinedStop() {}
 	
 	public JoinedStop(ArrayList<Stop> stops) {
 		this.stops = stops;
-		this.type = getType();
+		this.typeId = getTypeId();
 	}
 	
 	public void addStop(Stop stop) {
 		stops.add(stop);
-		this.type = getType();
+		this.typeId = getTypeId();
 	}
 	
-	public int getType() {
+	public int getTypeId() {
 		// return default 
 		if (stops.isEmpty())
 			return 0;
 		// get type of the first stop
-		int type = stops.get(0).getType(); 		
+		int type = stops.get(0).getTypeId(); 		
 		// if at least one doesn't equal to the first, return default
 		for (Stop s : stops)
-			if (s.getType() != type) return 0;
+			if (s.getTypeId() != type) return 0;
 		// else, return current
 		return type;
 	}
@@ -51,7 +51,7 @@ public class JoinedStop extends Stop {
 			res += "    {\n" + 
 		           "       id: " + s.id + "\n" +
 		           "       name: " + s.getName() + "\n" +
-		           "       type: " + s.getType() + "\n" +
+		           "       type: " + s.getTypeId() + "\n" +
 		           "    }\n";
 		
 		return res;
@@ -61,7 +61,7 @@ public class JoinedStop extends Stop {
 	public String toString() {
 		return "{\n" + 
 				"  id  : " + id + "\n" + 
-				"  type: " + type + "\n" +
+				"  type: " + typeId + "\n" +
 				"  children: {\n" +
 				printChildren() + 
 				"  }\n" +

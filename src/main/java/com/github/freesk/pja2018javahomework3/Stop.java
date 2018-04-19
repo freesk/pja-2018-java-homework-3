@@ -10,17 +10,17 @@ public class Stop {
 	final public String id = UUID.randomUUID().toString();
 	
 	private String name = "";
-	private int type = 0;
+	private int typeId = 0;
 	
 	public Stop() {}
 	
 	public Stop(String name, int type) {
 		this.name = name;
-		this.type = type;
+		this.typeId = type;
 	}
 	
-	public int getType() {
-		return this.type;
+	public int getTypeId() {
+		return this.typeId;
 	}
 	
 	public String getName() {
@@ -32,7 +32,7 @@ public class Stop {
 		return "{\n" + 
 				"  id  : " + id + "\n" +
 				"  name: " + name + "\n" + 
-				"  type: " + type + "\n" +
+				"  type: " + typeId + "\n" +
 				"}";				
 				
 	}

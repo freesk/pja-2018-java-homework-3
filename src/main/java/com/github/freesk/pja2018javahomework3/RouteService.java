@@ -41,7 +41,7 @@ public class RouteService {
 		ArrayList<String> res = new ArrayList<String>(); 
     	
     	for (Route r : routes)
-    		res.add(r.name + " (" + RouteService.getRouteType(r.type) + ")");
+    		res.add(r.name + " (" + RouteService.getRouteType(r.typeId) + ")");
     	
     	return res;
 	}
@@ -52,7 +52,7 @@ public class RouteService {
 	
 	public static String getRouteInfoById(int n) {
 		Route r = routes.get(n);
-		return r.name + " (" + RouteService.getRouteType(r.type) +  ")";
+		return r.name + " (" + RouteService.getRouteType(r.typeId) +  ")";
 	}
 	
 	public static void addRoute(int type, String name, ArrayList<Stop> stops) {
@@ -73,17 +73,12 @@ public class RouteService {
 	}
 	
 	public static String getRouteType(int n) {
-		if (n == 1)
-			return "BUS";
-		else if (n == 2) 
-			return "TRAIN";
-		else 
-			return "undefined";
+		return TransportTypeService.getTypeById(n);
 	}
 	
 	public static void removeByRouteId(int id) {
-		if (id < 0)
-			System.out.println("[Warning] route " + routes.get(id).name + " is unknown");
+		if (id < 0 || id > routes.size())
+			System.out.println("[Warning] route ID " + id + " is unknown");
 		else 
 			routes.remove(id);
 	}
@@ -93,62 +88,32 @@ public class RouteService {
 	}
 	
 	public static void assingStopsToRouteId(int id, ArrayList<Stop> stops) {
-		routes.get(id).stops = stops;
+		if (stops == null)
+			System.out.println("[Warning] cannot assing null");
+		else
+			routes.get(id).stops = stops;
 	}
 	
-	public static int getRouteIdType(int id) {
-		return routes.get(id).type;
+	public static int getRouteIdTypeId(int id) {
+		return routes.get(id).typeId;
 	}
 	
 	// inner class
 	static class Route {
 
 		private ArrayList<Stop> stops = new ArrayList<Stop>();
-		private int type = 0;
+		private int typeId = 0;
 		private String name = "";
 		
-		public Route() {}
-		
-		public Route(int type, String name) {
-			this.type = type;
-			this.name = name;
-		}
-		
 		public Route(int type, String name, ArrayList<Stop> stops) {
-			this(type, name);
+			this.typeId = type;
+			this.name = name;
 			this.stops = stops;
-		}
-			
-		public void assingStops(ArrayList<Stop> stops) {
-			if (stops == null)
-				System.out.println("[Warning] cannot assign null");
-			else {
-				this.stops = stops;	
-			}
-		}
-		
-		public int getNumberOfStops() {
-			return stops.size();
 		}
 		
 		public boolean hasStop(Stop stop) {
 			int index = stops.indexOf(stop);
 			return index > -1;
-		}
-		
-		public void addStop(Stop stop) {
-			if (stop.getType() != this.type) 
-				throw new RuntimeException("[Error] cannot add " + stop.getName() + " to the route because of its type");
-			
-			stops.add(stop);
-		}
-		
-		public void removeStop(Stop stop) {
-			int index = stops.indexOf(stop);
-			if (index < 0)
-				throw new RuntimeException("[Error] " + stop.getName() + "does not exist in the route");
-			
-			stops.remove(index);
 		}
 		
 	}
